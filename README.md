@@ -5,11 +5,20 @@ Just a small Kotlin / ANTLR4 project to convert markdown to HTML.
 
 ### Tasks
 
- - look at all of the official markdown features and create parser rules for them
+ - finish building the header transformations
+ - write rules for bold, italic and strikethrough
+ - write rules for lists
+ - write rules for links and images
+ - write rules for code highlighting (single and multiple lines)
+ - write rules for tables
+ - write rules for blockquotes
+ - write rules for inline HTML
+ - write rules for horizontal rule and line breaks
 
 ### Issues
 
- - none at the moment
+ - headers are not working
+ - we are not handling double line breaks to <br> tags
 
 ### Links
 
