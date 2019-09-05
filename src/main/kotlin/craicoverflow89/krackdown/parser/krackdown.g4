@@ -26,7 +26,7 @@ file returns [KrackdownResult out]
                 // NOTE: can we not just encapsulate the OR items into a new parser rule
                 //       and simply invoke buffer.append($newRule.result)?
             |
-                charSequence {buffer.append($charSequence.text);}
+                formatSequence {buffer.append($formatSequence.result);}
             )
             (NEWLINE+ | EOF)
             // NOTE: need to fix having optional EOF here and ensure it is after this block
@@ -70,6 +70,28 @@ expH6 returns [String result]
         {$result = "<h6>" + $charSequence.text + "</h6>";}
     ;
 
+formatSequence returns [String result]
+    @init {StringBuilder buffer = new StringBuilder();}
+    :   cs1 = charSequence
+        {buffer.append($cs1.text);}
+        (
+            formatBold
+            {buffer.append($formatBold.result);}
+            cs2 = charSequence
+            {buffer.append($cs2.text);}
+        )*?
+        {$result = buffer.toString();}
+    ;
+
+formatBold returns [String result]
+    :   //ASTERISK ASTERISK formatSequence ASTERISK ASTERISK
+        //{$result = "<b>" + $formatSequence.result + "</b>";
+
+        // TEMP
+        ASTERISK ASTERISK charSequence ASTERISK ASTERISK
+        {$result = "<b>" + $charSequence.text + "</b>";}
+    ;
+
 charSequence
     :   (CHAR | SPACE)+
     ;
@@ -77,6 +99,7 @@ charSequence
 // Lexer Rules
 
 HASH: '#';
+ASTERISK: '*';
 NEWLINE: [\r\n]+;
 SPACE: ' ';
 CHAR: .;
