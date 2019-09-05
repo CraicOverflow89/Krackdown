@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 fun main(args: Array<String>)
 {
     // Test File
-    val input = "hello world"
+    val input = InputReader.readFile("test1")
 
     // Test Parser
     val lexer = krackdownLexer(ANTLRInputStream(input))
@@ -16,5 +16,14 @@ fun main(args: Array<String>)
     val result = parser.file()
     //println(result.out.debug())
     println(result.out.toHTML())
+}
+
+class InputReader
+{
+
+    companion object
+    {
+        fun readFile(file: String) = InputReader::class.java.getResource("/input/$file.md").readText()
+    }
 
 }
