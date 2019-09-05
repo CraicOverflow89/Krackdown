@@ -97,6 +97,8 @@ formatSequence returns [String result]
         |
             formatStrikethrough {$result = $formatStrikethrough.result;}
         |
+            formatLink {$result = $formatLink.result;}
+        |
             charSequence {$result = $charSequence.text;}
         )
     ;
@@ -122,15 +124,50 @@ formatStrikethrough returns [String result]
         {$result = "<s>" + $formatSequence.result + "</s>";}
     ;
 
+formatLink returns [String result]
+    @init
+    {
+        StringBuilder buffer = new StringBuilder();
+        String title = null;
+    }
+    :   SB1 linkText = charSequence SB2
+        PAREN1 formatLinkUrl
+        (
+            SPACE QUOTE linkTitle = charSequence QUOTE
+            {title = $linkTitle.text;}
+        )?
+        PAREN2
+        {$result = new KrackdownLink($formatLinkUrl.text, $linkText.text, title).toHTML();}
+    ;
+
+formatLinkUrl
+    :   (ALPHA | COLON | DASH | DIGIT | PERIOD | SLASH1 | UNDERSCORE)+
+    ;
+
 charSequence
-    :   (CHAR | SPACE)+
+    :   //(ALPHA | ASTERISK | CHAR | COLON | DASH | DIGIT | HASH | PAREN1 | PAREN2 | PERIOD | QUOTE | SB1 | SB2 | SLASH1 | SLASH2 | SPACE | TILDE | UNDERSCORE)+
+        (CHAR | SPACE)+
+        // NOTE: we must allow HASH but it could interfere with header recognition
     ;
 
 // Lexer Rules
 
+SPACE: ' ';
+PERIOD: '.';
+DASH: '-';
+TILDE: '~';
+QUOTE: '"';
 HASH: '#';
 ASTERISK: '*';
-TILDE: '~';
+COLON: ':';
+UNDERSCORE: '_';
+PAREN1: '(';
+PAREN2: ')';
+SB1: '[';
+SB2: ']';
+SLASH1: '/';
+SLASH2: '\\';
 NEWLINE: [\r\n];
-SPACE: ' ';
 CHAR: .;
+ALPHA: [a-z];
+DIGIT: [0-9];
