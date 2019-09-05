@@ -20,6 +20,7 @@ file returns [KrackdownResult out]
             )
             (NEWLINE+ | EOF)
             // NOTE: need to fix having optional EOF here and ensure it is after this block
+            //       this (NEWLINE+ this)*? EOF
         )*?
         {$out = new KrackdownResult(buffer.toString());}
     ;
