@@ -6,9 +6,9 @@ gradlew.bat
 out
 src/main/kotlin/sleepyfox89/krackdown/parser/krackdown.interp
 src/main/kotlin/sleepyfox89/krackdown/parser/krackdown.tokens
-src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseListener
-src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseLexer
-src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseLexer.interp
-src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseLexer.tokens
-src/main/kotlin/sleepyfox89/krackdown/parser/krackdownListener
-src/main/kotlin/sleepyfox89/krackdown/parser/krackdownParser
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseListener.java
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownLexer.java
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownLexer.interp
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownLexer.tokens
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownListener.java
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownParser.java
