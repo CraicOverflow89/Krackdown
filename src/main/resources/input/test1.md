@@ -6,10 +6,20 @@ This is some standard text.
 
 Some bold text **here** and __here__.
 
-##### Small Header
+### Large Header
 
 Some italic text *here* and _here_.
 
-### Large Header
+#### Medium Header
 
 Some strikethrough text ~~here~~.
+
+##### Small Header
+
+ - this is a list
+ - here is the second item
+ - here is the third item
+
+###### Tiny Header
+
+Now trying a link [here](https://www.google.ie/) and [here](https://www.google.ie/ "Google IE")

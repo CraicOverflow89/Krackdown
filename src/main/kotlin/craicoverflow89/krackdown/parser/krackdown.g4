@@ -12,27 +12,37 @@ file returns [KrackdownResult out]
     @init {StringBuilder buffer = new StringBuilder();}
     :   (
             (
-                expH1 {buffer.append($expH1.result);}
+                expHeader {buffer.append($expHeader.result);}
             |
-                expH2 {buffer.append($expH2.result);}
-            |
-                expH3 {buffer.append($expH3.result);}
-            |
-                expH4 {buffer.append($expH4.result);}
-            |
-                expH5 {buffer.append($expH5.result);}
-            |
-                expH6 {buffer.append($expH6.result);}
-                // NOTE: can we not just encapsulate the OR items into a new parser rule
-                //       and simply invoke buffer.append($newRule.result)?
+                expBreak {buffer.append("<br>");}
             |
                 expSequence {buffer.append($expSequence.result);}
             )
-            (NEWLINE+ | EOF)
+            //(NEWLINE+ | EOF)
             // NOTE: need to fix having optional EOF here and ensure it is after this block
             //       this (NEWLINE+ this)*? EOF
         )*?
         {$out = new KrackdownResult(buffer.toString());}
+    ;
+
+expBreak
+    :   NEWLINE NEWLINE
+    ;
+
+expHeader returns [String result]
+    :   (
+            expH1 {$result = $expH1.result;}
+        |
+            expH2 {$result = $expH2.result;}
+        |
+            expH3 {$result = $expH3.result;}
+        |
+            expH4 {$result = $expH4.result;}
+        |
+            expH5 {$result = $expH5.result;}
+        |
+            expH6 {$result = $expH6.result;}
+        )
     ;
 
 expH1 returns [String result]
@@ -41,31 +51,31 @@ expH1 returns [String result]
     ;
 
 expH2 returns [String result]
-    :   (h += HASH)+ {$h.size() <= 2}?
+    :   (h += HASH)+ {$h.size() == 2}?
         SPACE charSequence
         {$result = "<h2>" + $charSequence.text + "</h2>";}
     ;
 
 expH3 returns [String result]
-    :   (h += HASH)+ {$h.size() <= 3}?
+    :   (h += HASH)+ {$h.size() == 3}?
         SPACE charSequence
         {$result = "<h3>" + $charSequence.text + "</h3>";}
     ;
 
 expH4 returns [String result]
-    :   (h += HASH)+ {$h.size() <= 4}?
+    :   (h += HASH)+ {$h.size() == 4}?
         SPACE charSequence
         {$result = "<h4>" + $charSequence.text + "</h4>";}
     ;
 
 expH5 returns [String result]
-    :   (h += HASH)+ {$h.size() <= 5}?
+    :   (h += HASH)+ {$h.size() == 5}?
         SPACE charSequence
         {$result = "<h5>" + $charSequence.text + "</h5>";}
     ;
 
 expH6 returns [String result]
-    :   (h += HASH)+ {$h.size() <= 6}?
+    :   (h += HASH)+ {$h.size() == 6}?
         SPACE charSequence
         {$result = "<h6>" + $charSequence.text + "</h6>";}
     ;
@@ -80,7 +90,6 @@ expSequence returns [String result]
     ;
 
 formatSequence returns [String result]
-    @init {StringBuilder buffer = new StringBuilder();}
     :   (
             formatBold {$result = $formatBold.result;}
         |
@@ -88,7 +97,7 @@ formatSequence returns [String result]
         |
             formatStrikethrough {$result = $formatStrikethrough.result;}
         |
-            cs2 = charSequence {$result = $charSequence.text;}
+            charSequence {$result = $charSequence.text;}
         )
     ;
 
@@ -122,6 +131,6 @@ charSequence
 HASH: '#';
 ASTERISK: '*';
 TILDE: '~';
-NEWLINE: [\r\n]+;
+NEWLINE: [\r\n];
 SPACE: ' ';
 CHAR: .;
