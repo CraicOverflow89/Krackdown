@@ -1,0 +1,14 @@
+.gradle
+.idea
+gradle
+gradlew
+gradlew.bat
+out
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdown.interp
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdown.tokens
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseListener
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseLexer
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseLexer.interp
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownBaseLexer.tokens
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownListener
+src/main/kotlin/sleepyfox89/krackdown/parser/krackdownParser
