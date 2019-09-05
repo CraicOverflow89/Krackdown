@@ -14,7 +14,6 @@ fun main(args: Array<String>)
     val lexer = krackdownLexer(ANTLRInputStream(input))
     val parser = krackdownParser(CommonTokenStream(lexer))
     val result = parser.file()
-    //println(result.out.debug())
     println(result.out.toHTML())
 }
 
