@@ -26,7 +26,7 @@ file returns [KrackdownResult out]
                 // NOTE: can we not just encapsulate the OR items into a new parser rule
                 //       and simply invoke buffer.append($newRule.result)?
             |
-                formatSequence {buffer.append($formatSequence.result);}
+                expSequence {buffer.append($expSequence.result);}
             )
             (NEWLINE+ | EOF)
             // NOTE: need to fix having optional EOF here and ensure it is after this block
@@ -70,26 +70,47 @@ expH6 returns [String result]
         {$result = "<h6>" + $charSequence.text + "</h6>";}
     ;
 
-formatSequence returns [String result]
+expSequence returns [String result]
     @init {StringBuilder buffer = new StringBuilder();}
-    :   cs1 = charSequence
-        {buffer.append($cs1.text);}
+    :   fs1 = formatSequence {buffer.append($fs1.result);}
         (
-            formatBold
-            {buffer.append($formatBold.result);}
-            cs2 = charSequence
-            {buffer.append($cs2.text);}
-        )*?
+            fs2 = formatSequence {buffer.append($fs2.result);}
+        )*
         {$result = buffer.toString();}
     ;
 
-formatBold returns [String result]
-    :   //ASTERISK ASTERISK formatSequence ASTERISK ASTERISK
-        //{$result = "<b>" + $formatSequence.result + "</b>";
+formatSequence returns [String result]
+    @init {StringBuilder buffer = new StringBuilder();}
+    :   (
+            formatBold {$result = $formatBold.result;}
+        |
+            formatItalic {$result = $formatItalic.result;}
+        |
+            formatStrikethrough {$result = $formatStrikethrough.result;}
+        |
+            cs2 = charSequence {$result = $charSequence.text;}
+        )
+    ;
 
-        // TEMP
-        ASTERISK ASTERISK charSequence ASTERISK ASTERISK
-        {$result = "<b>" + $charSequence.text + "</b>";}
+formatBold returns [String result]
+    :   ASTERISK ASTERISK
+        formatSequence
+        ASTERISK ASTERISK
+        {$result = "<b>" + $formatSequence.result + "</b>";}
+    ;
+
+formatItalic returns [String result]
+    :   ASTERISK
+        formatSequence
+        ASTERISK
+        {$result = "<i>" + $formatSequence.result + "</i>";}
+    ;
+
+formatStrikethrough returns [String result]
+    :   TILDE TILDE
+        formatSequence
+        TILDE TILDE
+        {$result = "<s>" + $formatSequence.result + "</s>";}
     ;
 
 charSequence
@@ -100,6 +121,7 @@ charSequence
 
 HASH: '#';
 ASTERISK: '*';
+TILDE: '~';
 NEWLINE: [\r\n]+;
 SPACE: ' ';
 CHAR: .;
