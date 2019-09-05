@@ -23,7 +23,7 @@ class InputReader
 
     companion object
     {
-        fun readFile(file: String) = InputReader::class.java.getResource("/input/$file.md").readText()
+        fun readFile(file: String) = javaClass.getResource("/input/$file.md").readText()
     }
 
 }
