@@ -1,4 +1,4 @@
-package sleepyfox89.krackdown.constructs
+package craicoverflow89.krackdown.constructs
 
 class KrackdownResult(private val content: String)
 {

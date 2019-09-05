@@ -2,7 +2,7 @@ grammar krackdown;
 
 @header
 {
-    import sleepyfox89.krackdown.constructs.*;
+    import craicoverflow89.krackdown.constructs.*;
 }
 
 // Parser Rules
