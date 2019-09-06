@@ -21,7 +21,7 @@ class KrackdownResult(private val content: ArrayList<KrackdownExpression>): Krac
         it.debug()
     }}\n"
 
-    // NOTE: for better visuals, we should implement an indentation system (so start at the left but indent for children
+    // NOTE: for better visuals, we should implement an indentation system (so start at the left but indent for children)
     //       passing the level of indentation along, which is passed to a single method that converts it to console text
 
     override fun toHTML() = StringBuilder().apply {
