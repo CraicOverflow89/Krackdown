@@ -16,7 +16,7 @@ class KrackdownExpressionHeader(private val size: Int, private val content: Krac
 
     override fun debug() = "KrackdownExpressionHeader {size: $size, content: ${content.debug()}"
 
-    override fun toHTML() = "<h$size>$content</h$size>"
+    override fun toHTML() = "<h$size>${content.toHTML()}</h$size>"
 
 }
 
