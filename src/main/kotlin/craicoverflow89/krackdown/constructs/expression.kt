@@ -38,6 +38,8 @@ class KrackdownExpressionString(private val content: String): KrackdownExpressio
 
     override fun debug() = "KrackdownExpressionString {content: $content}"
 
+    fun getContent() = content
+
     override fun toHTML() = content
 
 }

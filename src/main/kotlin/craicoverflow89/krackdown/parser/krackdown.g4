@@ -14,11 +14,14 @@ file returns [KrackdownResult out]
     @init {ArrayList<KrackdownExpression> result = new ArrayList();}
     :   (
             (
-                expHeader {result.add($expHeader.result);}
+                expHeader
+                {result.add($expHeader.result);}
             |
-                expBreak {result.add($expBreak.result);}
+                expBreak
+                {result.add($expBreak.result);}
             |
-                expSequence {result.add($expSequence.result);}
+                expSequence
+                {result.add($expSequence.result);}
             )
         )*? EOF
         {$out = new KrackdownResult(result);}
@@ -32,16 +35,19 @@ expBreak returns [KrackdownExpressionBreak result]
     ;
 
 expHeader returns [KrackdownExpressionHeader result]
-    :   (hash += HASH)+ {$hash.size() >= 1 && $hash.size() <= 6}?
+    :   (hash += HASH)+
+        {$hash.size() >= 1 && $hash.size() <= 6}?
         SPACE expString
         {$result = new KrackdownExpressionHeader($hash.size(), $expString.result);}
     ;
 
 expSequence returns [KrackdownExpressionSequence result]
     @init {ArrayList<KrackdownFormat> list = new ArrayList();}
-    :   fs1 = formatSequence {list.add($fs1.result);}
+    :   fs1 = formatSequence
+        {list.add($fs1.result);}
         (
-            fs2 = formatSequence {list.add($fs2.result);}
+            fs2 = formatSequence
+            {list.add($fs2.result);}
         )*
         {$result = new KrackdownExpressionSequence(list);}
     ;
@@ -58,32 +64,49 @@ expStringContent
 
 formatSequence returns [KrackdownFormat result]
     :   (
-            formatBold {$result = $formatBold.result;}
+            formatBold
+            {$result = $formatBold.result;}
         |
-            formatItalic {$result = $formatItalic.result;}
+            formatItalic
+            {$result = $formatItalic.result;}
         |
-            formatLink {$result = $formatLink.result;}
+            formatLink
+            {$result = $formatLink.result;}
         |
-            formatStrikethrough {$result = $formatStrikethrough.result;}
+            formatStrikethrough
+            {$result = $formatStrikethrough.result;}
         |
-            formatString {$result = $formatString.result;}
+            formatString
+            {$result = $formatString.result;}
         )
     ;
 
 formatBold returns [KrackdownFormatBold result]
-    :   ASTERISK ASTERISK
-        formatSequence
-        ASTERISK ASTERISK
-        // NOTE: need to also handle the UNDERSCORE alternative
-        {$result = new KrackdownFormatBold($formatSequence.result);}
+    :   (
+            ASTERISK ASTERISK
+            fs1 = formatSequence
+            ASTERISK ASTERISK
+            {$result = new KrackdownFormatBold($fs1.result);}
+        |
+            UNDERSCORE UNDERSCORE
+            fs2 = formatSequence
+            UNDERSCORE UNDERSCORE
+            {$result = new KrackdownFormatBold($fs2.result);}
+        )
     ;
 
 formatItalic returns [KrackdownFormatItalic result]
-    :   ASTERISK
-        formatSequence
-        ASTERISK
-        // NOTE: need to also handle the UNDERSCORE alternative
-        {$result = new KrackdownFormatItalic($formatSequence.result);}
+    :   (
+            ASTERISK
+            fs1 = formatSequence
+            ASTERISK
+            {$result = new KrackdownFormatItalic($fs1.result);}
+        |
+            UNDERSCORE
+            fs2 = formatSequence
+            UNDERSCORE
+            {$result = new KrackdownFormatItalic($fs2.result);}
+        )
     ;
 
 formatLink returns [KrackdownFormatLink result]
@@ -99,8 +122,12 @@ formatLink returns [KrackdownFormatLink result]
     ;
 
 formatLinkUrl returns [KrackdownExpressionString result]
-    :   url = (ALPHA | COLON | DASH | DIGIT | PERIOD | SLASH1 | UNDERSCORE)+
-        {$result = new KrackdownExpressionString($url.text);}
+    :   formatLinkUrlContent
+        {$result = new KrackdownExpressionString($formatLinkUrlContent.text);}
+    ;
+
+formatLinkUrlContent
+    :   (ALPHA | COLON | DASH | DIGIT | PERIOD | SLASH1 | UNDERSCORE)+
     ;
 
 formatStrikethrough returns [KrackdownFormatStrikethrough result]
@@ -112,7 +139,7 @@ formatStrikethrough returns [KrackdownFormatStrikethrough result]
 
 formatString returns [KrackdownFormatString result]
     :   expString
-        {$result = new KrackdownFormatString($expString.text);}
+        {$result = new KrackdownFormatString($expString.result.getContent());}
     ;
 
 // Lexer Rules
