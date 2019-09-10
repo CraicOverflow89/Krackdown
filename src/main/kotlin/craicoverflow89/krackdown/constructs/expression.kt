@@ -1,11 +1,17 @@
 package craicoverflow89.krackdown.constructs
 
-interface KrackdownExpression: KrackdownConstruct
+interface KrackdownExpression
+{
+
+    fun debug(indent: Int): KrackdownResultDebug
+    fun toHTML(): String
+
+}
 
 class KrackdownExpressionBreak: KrackdownExpression
 {
 
-    override fun debug() = "KrackdownExpressionBreak"
+    override fun debug(indent: Int) = KrackdownResultDebug("KrackdownExpressionBreak", indent)
 
     override fun toHTML() = "<br>"
 
@@ -14,7 +20,7 @@ class KrackdownExpressionBreak: KrackdownExpression
 class KrackdownExpressionHeader(private val size: Int, private val content: KrackdownExpressionString): KrackdownExpression
 {
 
-    override fun debug() = "KrackdownExpressionHeader {size: $size, content: ${content.debug()}"
+    override fun debug(indent: Int) = KrackdownResultDebug("KrackdownExpressionHeader {size: $size}", indent, listOf(content.debug(indent + 1)))
 
     override fun toHTML() = "<h$size>${content.toHTML()}</h$size>"
 
@@ -23,9 +29,9 @@ class KrackdownExpressionHeader(private val size: Int, private val content: Krac
 class KrackdownExpressionSequence(private val content: ArrayList<KrackdownFormat>): KrackdownExpression
 {
 
-    override fun debug() = "KrackdownExpressionSequence {${content.joinToString {
-        it.debug()
-    }}}"
+    override fun debug(indent: Int) = KrackdownResultDebug("KrackdownExpressionSequence", indent, content.map {
+        it.debug(indent + 1)
+    })
 
     override fun toHTML() = content.joinToString {
         it.toHTML()
@@ -36,7 +42,7 @@ class KrackdownExpressionSequence(private val content: ArrayList<KrackdownFormat
 class KrackdownExpressionString(private val content: String): KrackdownExpression
 {
 
-    override fun debug() = "KrackdownExpressionString {content: $content}"
+    override fun debug(indent: Int) = KrackdownResultDebug("KrackdownExpressionString {content: $content}", indent)
 
     fun getContent() = content
 

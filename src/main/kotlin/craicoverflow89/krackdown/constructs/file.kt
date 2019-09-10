@@ -2,30 +2,28 @@ package craicoverflow89.krackdown.constructs
 
 import java.lang.StringBuilder
 
-interface KrackdownConstruct
+class KrackdownResult(private val content: ArrayList<KrackdownExpression>)
 {
 
-    fun debug(): String
-    fun toHTML(): String
+    fun debug(indent: Int) = KrackdownResultDebug("KrackdownResult", indent, content.map {it.debug(indent + 1)})
 
-}
-
-class KrackdownResult(private val content: ArrayList<KrackdownExpression>): KrackdownConstruct
-{
-
-    override fun debug() = "\nKrackdownResult\n===============\n${content.filterNotNull().joinToString(", ") {
-        it.debug()
-    }}\n"
-    // NOTE: shouldn't have to be worried about NPEs here but there is too much Java going on in ANTLR to be sure
-    // NOTE: for better visuals, we should implement an indentation system (so start at the left but indent for children)
-    //       passing the level of indentation along, which is passed to a single method that converts it to console text
-
-    override fun toHTML() = StringBuilder().apply {
+    fun toHTML() = StringBuilder().apply {
         append("<html>")
         append("<body>")
         content.forEach {append(it.toHTML())}
         append("</body>")
         append("</html>")
+    }.toString()
+    // NOTE: we could actually make the indent (or child/parent relations in general) stuff work here, for HTML indentation
+
+}
+
+data class KrackdownResultDebug(val content: String, val indent: Int, val children: List<KrackdownResultDebug> = listOf())
+{
+
+    override fun toString() = StringBuilder().apply {
+        append(" ".repeat(indent * 4) + content)
+        children.forEach {append("\n$it")}
     }.toString()
 
 }
