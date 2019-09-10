@@ -56,7 +56,7 @@ class KrackdownFormatStrikethrough(private val content: KrackdownFormat): Krackd
 class KrackdownFormatString(private val content: String): KrackdownFormat
 {
 
-    override fun debug(indent: Int) = KrackdownResultDebug("KrackdownFormatString {content: $content}", indent + 1)
+    override fun debug(indent: Int) = KrackdownResultDebug("KrackdownFormatString {content: $content}", indent)
 
     override fun toHTML() = content
 

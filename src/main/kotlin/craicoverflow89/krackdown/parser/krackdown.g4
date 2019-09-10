@@ -78,6 +78,7 @@ formatSequence returns [KrackdownFormat result]
         |
             formatString
             {$result = $formatString.result;}
+            // NOTE: the problem here is that above formats are just appearing as formatString instead
         )
     ;
 
